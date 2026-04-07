@@ -1,19 +1,26 @@
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { AuthService } from '../services/auth.service';
+import { filter, map, take } from 'rxjs/operators';
 
 export const authGuard = () => {
   const router = inject(Router);
-  const auth = getAuth();
+  const authService = inject(AuthService);
 
-  return new Promise<boolean>((resolve) => {
-    onAuthStateChanged(auth, (user) => {
+  return authService.user$.pipe(
+
+    // 🔥 WAIT until Firebase responds
+    filter(user => user !== undefined),
+
+    take(1),
+
+    map(user => {
       if (user) {
-        resolve(true);
+        return true;
       } else {
         router.navigate(['/auth/login']);
-        resolve(false);
+        return false;
       }
-    });
-  });
+    })
+  );
 };
