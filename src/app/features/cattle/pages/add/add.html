@@ -1,0 +1,65 @@
+<div class="container py-3">
+
+    <div class="row mb-3 align-items-center">
+      <div class="col-auto">
+        <i class="bi bi-arrow-left fs-4" (click)="back()"></i>
+      </div>
+      <div class="col-auto d-flex justify-content-center">
+        <h4 class="text-center mb-0">Add Cattle</h4>
+      </div>
+    </div>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+    <!-- Name -->
+    <div class="mb-4">
+      <label class="form-label mb-1">Cattle Name</label>
+      <input type="text" class="form-control" placeholder="Enter Cattle Name" formControlName="name"
+        [class.is-invalid]="f['name'].invalid && (f['name'].touched || isSubmitted)">
+
+      @if (f['name'].invalid && (f['name'].touched || isSubmitted)) {
+      <small class="text-danger">Name is required</small>
+      }
+    </div>
+
+    <div class="mb-4">
+      <label class="form-label mb-1">Type</label>
+      <select class="form-select" formControlName="type"
+        [class.is-invalid]="f['type'].invalid && (f['type'].touched || isSubmitted)">
+        <option value="">Select Type</option>
+        <option value="cow">Cow</option>
+        <option value="buffalo">Buffalo</option>
+        <option value="goat">Goat</option>
+      </select>
+
+      @if (f['type'].invalid && (f['type'].touched || isSubmitted)) {
+      <small class="text-danger">Please select type</small>
+      }
+    </div>
+
+    <!-- DOB -->
+    <div class="mb-4">
+      <label class="form-label">Date Of Birth(Optional)</label>
+      <input type="date" [max]="today" class="form-control" formControlName="dob">
+    </div>
+
+    <!-- Image -->
+    <div class="mb-4">
+      <label class="form-label">Upload Photo(Optional)</label>
+      <input type="file" class="form-control" (change)="onFileChange($event)">
+    </div>
+
+    <!-- Notes -->
+    <div class="mb-4">
+      <label class="form-label">Notes(Optional)</label>
+      <textarea class="form-control" placeholder="Notes" formControlName="notes"></textarea>
+      <span class="text-muted" style="font-size:12px; line-height: 3px;">
+        (You can add details like mother name, breed, health info, or any special notes.)
+      </span>
+    </div>
+
+    <!-- Button -->
+    <button class="btn btn-primary w-100" [disabled]="form.invalid">Save</button>
+
+  </form>
+</div>

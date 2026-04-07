@@ -1,1 +1,33 @@
-<p>login works!</p>
+<div class="container d-flex align-items-center justify-content-center vh-100">
+    <div class="card shadow p-4 w-100" style="max-width: 400px;">
+
+        <h3 class="text-center mb-3">Login</h3>
+
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+
+            <div class="mb-3">
+                <input type="email" class="form-control" placeholder="Enter email" formControlName="email">
+            </div>
+
+            <div class="mb-3">
+                <input type="password" class="form-control" placeholder="Enter password" formControlName="password">
+            </div>
+
+            <button class="btn btn-primary w-100" type="submit">Login</button>
+
+            <div class="text-danger mt-2 text-center" *ngIf="errorMsg">
+                {{ errorMsg }}
+            </div>
+
+            <div class="text-center mt-3">
+                <small>
+                    Don't have account?
+                    <span class="text-primary" role="button" (click)="goToRegister()">
+                        Register
+                    </span>
+                </small>
+            </div>
+
+        </form>
+    </div>
+</div>

@@ -1,1 +1,95 @@
-/* You can add global styles to this file, and also import other style files */
+:root {
+    --primary-green: #29a329;
+    --primary-green-dark: #1f7a1f;
+    --primary-green-light: #33cc33;
+}
+
+.btn-primary {
+    background-color: var(--primary-green);
+    border: none;
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-green-dark);
+}
+
+.btn-outline-primary {
+    border-color: var(--primary-green);
+    color: var(--primary-green);
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--primary-green);
+    color: #fff;
+}
+
+i {
+    // color: var(--primary-green);
+}
+
+.icon-green {
+    color: var(--primary-green);
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: #73d5ab;
+    box-shadow: 0 0 0 0.2rem rgb(94 138 121 / 25%);
+    background-color: #2a2a2a;
+    color: #fff;
+}
+
+.dashboard-card:hover {
+    border: 1px solid var(--primary-green);
+}
+
+.fab-btn {
+    background: var(--primary-green);
+}
+
+.fab-btn:hover {
+    background: var(--primary-green-dark);
+}
+
+.dark-header {
+    border-bottom: 1px solid var(--primary-green);
+}
+
+.text-primary {
+    color: var(--primary-green) !important;
+}
+
+/* 🌑 Dark Theme Base */
+body {
+    background-color: #121212;
+    color: #e0e0e0;
+}
+
+/* Card */
+.card {
+    background-color: #1e1e1e;
+    color: #fff;
+    border: none;
+}
+
+/* Inputs */
+.form-control,
+.form-select {
+    background-color: #2a2a2a;
+    border: 1px solid #444;
+    color: #fff;
+}
+
+.form-control::placeholder {
+    color: #aaa;
+}
+
+.btn-success {
+    background-color: #22c55e;
+    border: none;
+}
+
+/* Text */
+.text-muted {
+    color: #aaa !important;
+}
