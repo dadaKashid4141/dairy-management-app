@@ -5,6 +5,7 @@ import { AuthApi } from '../../services/auth-api';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../../core/services/auth.service';
 import { ToastrService } from 'ngx-toastr';
+import { LoaderService } from '../../../../core/services/loader.service';
 
 @Component({
   selector: 'app-login',
@@ -19,7 +20,8 @@ export class Login {
     private fb: FormBuilder,
     private auth: AuthService,
     private router: Router,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    public loader: LoaderService
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -31,6 +33,7 @@ export class Login {
 
   async onSubmit() {
     if (this.loginForm.invalid) return;
+    this.loader.show();
 
     const { email, password } = this.loginForm.value;
 
@@ -54,6 +57,7 @@ export class Login {
       }
 
     } finally {
+      this.loader.hide();
     }
   }
 

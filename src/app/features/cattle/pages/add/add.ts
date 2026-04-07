@@ -1,4 +1,4 @@
-import { CommonModule, Location } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { Auth } from '@angular/fire/auth';
 import { Firestore, serverTimestamp } from '@angular/fire/firestore';
@@ -6,6 +6,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { addDoc, collection } from '@angular/fire/firestore';
+import { LoaderService } from '../../../../core/services/loader.service';
 
 @Component({
   selector: 'app-add',
@@ -26,7 +27,7 @@ export class Add {
     private router: Router,
     private firestore: Firestore,
     private auth: Auth,
-    private location: Location,
+    private loader: LoaderService,
   ) {
     this.form = this.fb.group({
       name: ['', Validators.required],
@@ -54,6 +55,7 @@ export class Add {
       this.toastr.error('Please fill all required fields');
       return;
     }
+    this.loader.show();
 
     try {
       const user = this.auth.currentUser;
@@ -73,13 +75,14 @@ export class Add {
       this.isSubmitted = false;
       this.router.navigate(['/dashboard'])
     } catch (err) {
-      console.error(err);
       this.toastr.error('Failed to save');
+    } finally {
+      this.loader.hide();
     }
   }
 
 
   back() {
-    this.location.back();
+    this.router.navigate(['/dashboard'])
   }
 }

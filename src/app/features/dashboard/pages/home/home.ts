@@ -3,8 +3,9 @@ import { Component } from '@angular/core';
 import { collection, collectionData, Firestore } from '@angular/fire/firestore';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../../core/services/auth.service';
-import { map, switchMap } from 'rxjs/operators';
+import { map, switchMap, take, tap } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
+import { LoaderService } from '../../../../core/services/loader.service';
 
 type CattleType = 'cow' | 'buffalo' | 'goat';
 interface Cattle {
@@ -30,10 +31,9 @@ export class Home {
   constructor(
     public router: Router,
     private firestore: Firestore,
-    private authService: AuthService
-
+    private authService: AuthService,
+    private loader: LoaderService
   ) {
-
   }
 
   ngOnInit() {
@@ -49,15 +49,20 @@ export class Home {
     this.router.navigate(['/add']);
   }
 
-
   loadCounts() {
-    this.categories$ = this.authService.user$.pipe(
+
+    this.loader?.show();
+    const cattle$ = this.authService.user$.pipe(
       switchMap(user => {
         if (!user) return of([]);
-
         const ref = collection(this.firestore, `users/${user.uid}/cattle`);
         return collectionData(ref);
-      }),
+      })
+    );
+    cattle$.pipe(take(1)).subscribe(() => {
+      this.loader?.hide();
+    });
+    this.categories$ = cattle$.pipe(
       map((data: any[]) => {
 
         const counts: Record<CattleType, number> = {
