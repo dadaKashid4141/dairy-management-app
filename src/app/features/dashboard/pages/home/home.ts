@@ -41,8 +41,7 @@ export class Home {
   }
 
   onCardClick(item: any) {
-    console.log(item);
-    // next → list page
+    this.router.navigate(['/cattle', item.type]);
   }
 
   addCattle() {

@@ -30,7 +30,20 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/cattle/pages/add/add')
             .then(m => m.Add)
+      },
+      {
+        path: 'edit/:id',
+        loadComponent: () =>
+          import('./features/cattle/pages/add/add')
+            .then(m => m.Add)
       }
     ]
+  },
+  {
+    path: 'cattle/:type',
+    loadComponent: () =>
+      import('./features/cattle/pages/cattle-list/cattle-list')
+        .then(m => m.CattleList),
+    canActivate: [authGuard]
   }
 ];
