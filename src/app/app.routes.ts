@@ -45,5 +45,11 @@ export const routes: Routes = [
       import('./features/cattle/pages/cattle-list/cattle-list')
         .then(m => m.CattleList),
     canActivate: [authGuard]
+  },
+  {
+    path: 'events/:cattleId',
+    loadComponent: () =>
+      import('./features/cattle/pages/events/events')
+        .then(m => m.Events)
   }
 ];

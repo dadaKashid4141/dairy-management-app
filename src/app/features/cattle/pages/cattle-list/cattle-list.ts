@@ -13,16 +13,16 @@ import { Auth, authState } from '@angular/fire/auth';
 import { ToastrService } from 'ngx-toastr';
 import { collectionData } from '@angular/fire/firestore';
 import { Observable, filter, switchMap } from 'rxjs';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-cattle-list',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './cattle-list.html',
   styleUrl: './cattle-list.scss',
 })
 export class CattleList implements OnInit {
-
   cattleList$!: Observable<any[]>;
   type = '';
 
@@ -32,7 +32,7 @@ export class CattleList implements OnInit {
     private toastr: ToastrService,
     private firestore: Firestore,
     private auth: Auth
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.type = this.route.snapshot.paramMap.get('type')!;
@@ -81,6 +81,10 @@ export class CattleList implements OnInit {
     this.router.navigate(['/']);
   }
   trackById(index: number, item: any) {
-  return item.id;
-}
+    return item.id;
+  }
+
+  goToEvents(item: any) {
+    this.router.navigate(['/events', item.id]);
+  }
 }
