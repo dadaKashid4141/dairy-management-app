@@ -1,7 +1,7 @@
 <div class="container py-3">
 
     <div class="d-flex align-items-center justify-content-between mb-4">
-            <h4 class="text-center">Dashboard</h4>
+        <h4 class="text-center">Dashboard</h4>
         <button class="btn btn-primary btn-sm" (click)="addCattle()">
             + Add
         </button>
@@ -102,9 +102,32 @@
 
     </div>
 
-    <!-- ➕ FLOAT BUTTON -->
-    <button class="btn btn-primary fab-btn d-flex align-items-center justify-content-center" (click)="true">
-         <i class="bi bi-chat-dots fs-4"></i>
+    <!-- AI FLOAT BUTTON -->
+    <button class="btn btn-primary fab-btn d-flex align-items-center justify-content-center" (click)="toggleChat()">
+        <i class="bi bi-chat-dots fs-4"></i>
     </button>
+
+    <!-- 💬 CHAT BOX -->
+    <div class="chat-box" *ngIf="isChatOpen">
+
+        <div class="chat-header">
+            AI Assistant
+            <button class="btn-close" (click)="toggleChat()"></button>
+        </div>
+
+        <div class="chat-body">
+            <div *ngFor="let msg of messages">
+                <div [ngClass]="msg.role">
+                    {{ msg.text }}
+                </div>
+            </div>
+        </div>
+
+        <div class="chat-footer d-flex">
+            <input [(ngModel)]="userInput" class="form-control" placeholder="Ask something..." />
+            <button class="btn btn-primary ms-2" (click)="triggerAI()">Send</button>
+        </div>
+
+    </div>
 
 </div>

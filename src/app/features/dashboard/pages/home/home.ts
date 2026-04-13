@@ -8,6 +8,7 @@ import { firstValueFrom, Observable, of } from 'rxjs';
 import { LoaderService } from '../../../../core/services/loader.service';
 import { authState } from '@angular/fire/auth';
 import { ToastrService } from 'ngx-toastr';
+import { FormsModule } from '@angular/forms';
 
 type CattleType = 'cow' | 'buffalo' | 'goat';
 interface Cattle {
@@ -16,7 +17,7 @@ interface Cattle {
 
 @Component({
   selector: 'app-home',
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './home.html',
   styleUrl: './home.scss',
 })
@@ -30,6 +31,10 @@ export class Home {
     { title: 'Buffalo', type: 'buffalo', count: 0 },
     { title: 'Goats', type: 'goat', count: 0 }
   ];
+
+  isChatOpen = false;
+  userInput = '';
+  messages: any[] = [];
 
   constructor(
     public router: Router,
@@ -136,4 +141,14 @@ export class Home {
       )
     );
   }
+
+  toggleChat() {
+    this.isChatOpen = !this.isChatOpen;
+  }
+
+  triggerAI() {
+    this.toastr.warning('This feature is under development...');
+    this.isChatOpen = !this.isChatOpen;
+  }
+
 }
