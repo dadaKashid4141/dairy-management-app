@@ -10,37 +10,58 @@
   </div>
 
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
-
-    <!-- Name -->
     <div class="mb-4">
-      <label class="form-label mb-1">Cattle Name</label>
-      <input type="text" class="form-control" placeholder="Enter Cattle Name" formControlName="name"
-        [class.is-invalid]="f['name'].invalid && (f['name'].touched || isSubmitted)">
-
-      @if (f['name'].invalid && (f['name'].touched || isSubmitted)) {
-      <small class="text-danger">Name is required</small>
-      }
-    </div>
-
-    <div class="mb-4">
-      <label class="form-label mb-1">Type</label>
-      <select class="form-select" formControlName="type"
-        [class.is-invalid]="f['type'].invalid && (f['type'].touched || isSubmitted)">
-        <option value="">Select Type</option>
-        <option value="cow">Cow</option>
-        <option value="buffalo">Buffalo</option>
-        <option value="goat">Goat</option>
+      <label class="form-label">Category</label>
+      <select class="form-select" formControlName="category">
+        <option value="cattle">Cattle</option>
+        <option value="other">Other</option>
       </select>
-
-      @if (f['type'].invalid && (f['type'].touched || isSubmitted)) {
-      <small class="text-danger">Please select type</small>
-      }
     </div>
 
-    <!-- DOB -->
-    <div class="mb-4">
-      <label class="form-label">Date Of Birth(Optional)</label>
-      <input type="date" [max]="today" class="form-control" formControlName="dob">
+    <div *ngIf="form.value.category === 'cattle'">
+      <!-- Name -->
+      <div class="mb-4">
+        <label class="form-label mb-1">Cattle Name</label>
+        <input type="text" class="form-control" placeholder="Enter Cattle Name" formControlName="name"
+          [class.is-invalid]="f['name'].invalid && (f['name'].touched || isSubmitted)">
+
+        @if (f['name'].invalid && (f['name'].touched || isSubmitted)) {
+        <small class="text-danger">Name is required</small>
+        }
+      </div>
+
+      <div class="mb-4">
+        <label class="form-label mb-1">Type</label>
+        <select class="form-select" formControlName="type"
+          [class.is-invalid]="f['type'].invalid && (f['type'].touched || isSubmitted)">
+          <option value="">Select Type</option>
+          <option value="cow">Cow</option>
+          <option value="buffalo">Buffalo</option>
+          <option value="goat">Goat</option>
+        </select>
+
+        @if (f['type'].invalid && (f['type'].touched || isSubmitted)) {
+        <small class="text-danger">Please select type</small>
+        }
+      </div>
+
+      <!-- DOB -->
+      <div class="mb-4">
+        <label class="form-label">Date Of Birth(Optional)</label>
+        <input type="date" [max]="today" class="form-control" formControlName="dob">
+      </div>
+    </div>
+    <div *ngIf="form.get('category')?.value === 'other'">
+      <!-- Title -->
+      <div class="mb-4">
+        <label class="form-label">Title</label>
+        <input type="text" class="form-control" formControlName="title">
+      </div>
+      <!-- Date -->
+      <div class="mb-4">
+        <label class="form-label">Date</label>
+        <input type="date" [max]="today" class="form-control" formControlName="date">
+      </div>
     </div>
 
     <!-- Image -->
