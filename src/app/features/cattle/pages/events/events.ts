@@ -38,6 +38,10 @@ export class Events {
 
   todayDate: string = '';
 
+  fromDate!: string;
+  toDate!: string;
+
+  result: any = null;
 
 
 
@@ -182,6 +186,51 @@ export class Events {
 
   goBack() {
     this.location.back()
+  }
+
+  openDateCalModal() {
+    this.fromDate = ''; this.toDate = ''; this.result = null;
+    const modal = new (window as any).bootstrap.Modal(
+      document.getElementById('dateCalcModal')
+    );
+    modal.show();
+  }
+  calculate() {
+    if (!this.fromDate || !this.toDate) return;
+    const from = new Date(this.fromDate);
+    const to = new Date(this.toDate);
+    if (to < from) {
+      alert('To Date should be greater than From Date');
+      return;
+    }
+    const diffTime = to.getTime() - from.getTime();
+    const totalDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+    let years = to.getFullYear() - from.getFullYear();
+    let months = to.getMonth() - from.getMonth();
+    let days = to.getDate() - from.getDate();
+    if (days < 0) {
+      months--;
+      const prevMonth = new Date(to.getFullYear(), to.getMonth(), 0);
+      days += prevMonth.getDate();
+    }
+    if (months < 0) {
+      years--;
+      months += 12;
+    }
+    const totalMonths = years * 12 + months;
+    const weeks = Math.floor(totalDays / 7);
+    const remainingDays = totalDays % 7;
+    this.result = {
+      years,
+      months,
+      days,
+      totalMonths,
+      weeks,
+      remainingDays,
+      totalDays,
+      fromFormatted: from.toDateString(),
+      toFormatted: to.toDateString()
+    };
   }
 
 }

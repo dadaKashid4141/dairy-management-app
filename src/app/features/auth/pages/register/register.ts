@@ -42,6 +42,7 @@ export class Register {
       this.router.navigate(['/auth/login']);
 
     } catch (err: any) {
+      debugger
 
       if (err.code === 'auth/email-already-in-use') {
         this.toastr.error('Email already exists');

@@ -38,6 +38,9 @@
 
     </ng-container>
 
+    <button class="btn btn-primary fab" (click)="openDateCalModal()">
+        📅
+    </button>
 </div>
 
 
@@ -102,6 +105,34 @@
                 <button class="btn btn-primary" (click)="saveEvent()">Save</button>
             </div>
 
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="dateCalcModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content p-3">
+            <div class="modal-header p-0 pb-3 mb-3">
+                <h5 class="modal-title">Date Calculator</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="mb-3">
+                <label>From Date</label>
+                <input type="date" class="form-control" [(ngModel)]="fromDate">
+            </div>
+            <div class="mb-3">
+                <label>To Date</label>
+                <input type="date" class="form-control" [(ngModel)]="toDate">
+            </div>
+            <button class="btn btn-success w-100 mt-2" (click)="calculate()">Calculate</button>
+            <div *ngIf="result" class="mt-3">
+                <div class="text-muted">
+                    <p class="mb-1">- <b>{{result.totalDays}} days</b></p>
+                    <p class="mb-1">- or <b>{{result.totalMonths}} months {{result.days}} days</b></p>
+                    <p class="mb-1">- or <b>{{result.weeks}} weeks {{result.remainingDays}} days</b></p>
+                    <p class="mb-1">- <b>{{result.years}} years {{result.months}} months {{result.days}} days</b></p>
+                </div>
+            </div>
         </div>
     </div>
 </div>
