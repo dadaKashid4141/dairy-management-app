@@ -52,6 +52,29 @@
 
     </div>
     <hr>
+    <!-- 🔔 REMINDER WIDGET -->
+    <div class="card p-3 mt-3">
+        <h6 class="mb-2">🔔 Upcoming Reminders</h6>
+        <ng-container *ngIf="reminders$ | async as reminders">
+            <div *ngIf="reminders.length === 0" class="text-muted small text-center">
+                No reminders 🎉
+            </div>
+            <div *ngFor="let r of reminders" class="border-bottom py-2" (click)="openCattle(r.cattleId)">
+                <div class="fw-semibold">
+                    {{ r.cattleName }} → {{ r.name }}
+                </div>
+                <div class="small" [ngClass]="{
+                    'text-danger': r.status === 'overdue',
+                    'text-warning': r.status === 'today',
+                    'text-success': r.status === 'upcoming'
+                    }">
+                    {{ r.reminder.reminderDate | date:'dd-MMM-yyyy' }}
+                    <span *ngIf="r.status === 'today'">(Today)</span>
+                    <span *ngIf="r.status === 'overdue'">(Overdue)</span>
+                </div>
+            </div>
+        </ng-container>
+    </div>
 
     <!-- 📌 OTHER SECTION -->
     <div class="mt-4">

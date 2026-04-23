@@ -5,6 +5,7 @@ import {
   deleteDoc,
   doc,
   Firestore,
+  orderBy,
   query,
   where
 } from '@angular/fire/firestore';
@@ -45,7 +46,8 @@ export class CattleList implements OnInit {
       switchMap(user => {
         const q = query(
           collection(this.firestore, `users/${user!.uid}/cattle`),
-          where('type', '==', this.type)
+          where('type', '==', this.type),
+          orderBy('updatedAt', 'desc')
         );
 
         return collectionData(q, { idField: 'id' });

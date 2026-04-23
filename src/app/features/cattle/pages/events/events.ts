@@ -43,6 +43,9 @@ export class Events {
 
   result: any = null;
 
+  enableReminder = false;
+  remindBeforeDays: number = 0;
+  reminderDate: string = '';
 
 
   constructor(
@@ -65,13 +68,12 @@ export class Events {
           this.firestore,
           `users/${user!.uid}/cattle/${this.cattleId}`
         );
-        return docData(ref) as Observable<Cattle>; // ✅ FIX
+        return docData(ref) as Observable<Cattle>;
       })
     );
 
 
     this.events$ = authState(this.auth).pipe(
-      // 🔥 WAIT until Firebase gives real user
       filter(user => !!user),
       switchMap(user => {
         const q = query(
@@ -98,6 +100,12 @@ export class Events {
     this.eventDate = event?.date || '';
     this.eventNotes = event?.notes || '';
 
+    // 🔔 Reminder prefill (edit mode)
+    this.enableReminder = !!event?.reminder;
+    this.remindBeforeDays = event?.reminder?.remindBeforeDays || 0;
+    this.reminderDate = event?.reminder?.reminderDate || '';
+
+
     const modal = new (window as any).bootstrap.Modal(
       document.getElementById('eventModal')
     );
@@ -123,6 +131,24 @@ export class Events {
 
       const basePath = `users/${user.uid}/cattle/${this.cattleId}/events`;
 
+      let finalReminderDate: string | null = null;
+      if (this.enableReminder) {
+        if (this.reminderDate) {
+          finalReminderDate = this.reminderDate;
+        } else if (this.remindBeforeDays >= 0) {
+          const event = new Date(this.eventDate);
+          event.setDate(event.getDate() - this.remindBeforeDays);
+          finalReminderDate = event.toISOString().split('T')[0];
+        }
+      }
+      const reminderData = this.enableReminder
+        ? {
+          reminderDate: finalReminderDate,
+          remindBeforeDays: this.remindBeforeDays || 0,
+          status: 'pending'
+        }
+        : null;
+
       if (this.isEditMode) {
         await updateDoc(
           doc(this.firestore, `${basePath}/${this.selectedEvent.id}`),
@@ -131,6 +157,7 @@ export class Events {
             name: this.eventName,
             date: this.eventDate,
             notes: this.eventNotes,
+            reminder: reminderData,
             updatedAt: serverTimestamp()
           }
         );
@@ -145,6 +172,7 @@ export class Events {
             name: this.eventName,
             date: this.eventDate,
             notes: this.eventNotes,
+            reminder: reminderData,
             createdAt: serverTimestamp()
           }
         );
@@ -157,12 +185,24 @@ export class Events {
         document.getElementById('eventModal')
       );
       modal.hide();
+      this.resetForm();
 
     } catch (err) {
       console.error(err);
       this.toastr.error('Failed');
     }
   }
+  resetForm() {
+    this.eventType = '';
+    this.eventName = '';
+    this.eventDate = '';
+    this.eventNotes = '';
+
+    this.enableReminder = false;
+    this.remindBeforeDays = 0;
+    this.reminderDate = '';
+  }
+
 
   async deleteEvent(event: any) {
     const confirmDelete = confirm(
