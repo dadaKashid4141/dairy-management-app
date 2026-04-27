@@ -20,4 +20,11 @@ export class Header {
     await this.auth.logout();
     this.router.navigate(['/auth/login']);
   }
+
+  confirmLogout() {
+  const confirm = window.confirm('Are you sure you want to logout?');
+  if (confirm) {
+    this.logout();
+  }
+}
 }

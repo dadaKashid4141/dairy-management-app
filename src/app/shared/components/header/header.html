@@ -1,4 +1,4 @@
-<nav class="navbar px-3 shadow-sm dark-header">
+<!-- <nav class="navbar px-3 shadow-sm dark-header">
 
   <span class="navbar-brand mb-0 h6 text-white" routerLink="/dashboard">
     🐄 My Dairy
@@ -7,5 +7,34 @@
   <button class="btn btn-outline-light btn-sm" (click)="logout()">
     <i class="bi bi-box-arrow-right"></i>
   </button>
+
+</nav> -->
+
+<nav class="navbar px-3 shadow-sm dark-header">
+
+  <!-- App Name -->
+  <span class="navbar-brand mb-0 h6 text-white" routerLink="/dashboard">
+    🐄 My Dairy
+  </span>
+
+  <!-- Dropdown Menu -->
+  <div class="dropdown">
+
+    <button class="btn btn-outline-light" data-bs-toggle="dropdown">
+      ☰
+    </button>
+
+    <ul class="dropdown-menu dropdown-menu-end">
+
+      <!-- Logout -->
+      <li>
+        <button class="dropdown-item text-danger" (click)="confirmLogout()">
+          🚪 Logout
+        </button>
+      </li>
+
+    </ul>
+
+  </div>
 
 </nav>
