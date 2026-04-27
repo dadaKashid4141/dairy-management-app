@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { Component } from '@angular/core';
 import { Auth } from '@angular/fire/auth';
 import { doc, Firestore, getDoc, serverTimestamp, updateDoc } from '@angular/fire/firestore';
@@ -34,7 +34,8 @@ export class Add {
     private firestore: Firestore,
     private auth: Auth,
     private loader: LoaderService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private location: Location
   ) {
     this.form = this.fb.group({
       category: ['cattle', Validators.required],
@@ -227,7 +228,7 @@ export class Add {
 
 
   back() {
-    this.router.navigate(['/dashboard'])
+    this.location.back();
   }
 
   ngOnDestroy() {

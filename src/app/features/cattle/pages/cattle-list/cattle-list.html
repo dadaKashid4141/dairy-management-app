@@ -25,18 +25,18 @@
 
       <div class="d-flex align-items-center">
 
-        <div class="avatar me-3">
+        <div class="avatar me-3" (click)="edit(item)">
           <span *ngIf="type === 'cow'">🐄</span>
           <span *ngIf="type === 'buffalo'">🐃</span>
           <span *ngIf="type === 'goat'">🐐</span>
         </div>
 
-        <div class="flex-grow-1">
+        <div class="flex-grow-1" (click)="goToEvents(item)">
           <div class="fw-bold">{{ item.name }}</div>
           <small class="text-muted">{{ item.dob }}</small>
         </div>
 
-        <div class="d-flex gap-3">
+        <div class="d-flex gap-4">
           <i class="bi bi-pencil-square action-icon" (click)="edit(item)"></i>
           <i class="bi bi-trash action-icon text-danger" (click)="delete(item)"></i>
           <i class="bi bi-calendar-event action-icon text-primary" (click)="goToEvents(item)"></i>
