@@ -138,7 +138,15 @@ export class Home {
         data
           .filter(item => item.category === 'other')
           .sort((a, b) => {
-            return (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0);
+            const aTime =
+              a.updatedAt?.seconds ||
+              a.createdAt?.seconds ||
+              0;
+            const bTime =
+              b.updatedAt?.seconds ||
+              b.createdAt?.seconds ||
+              0;
+            return bTime - aTime; // latest on top
           })
       )
     );

@@ -31,8 +31,8 @@ export class Events {
   selectedEvent: any = null;
   isEditMode = false;
 
-  eventType = '';
-  eventName = '';
+  eventType = 'production';
+  eventName = 'inseminated';
   eventDate = '';
   eventNotes = '';
 
@@ -95,8 +95,8 @@ export class Events {
     this.isEditMode = !!event;
     this.selectedEvent = event || null;
 
-    this.eventType = event?.type || '';
-    this.eventName = event?.name || '';
+    this.eventType = event?.type || 'production';
+    this.eventName = event?.name || 'inseminated';
     this.eventDate = event?.date || '';
     this.eventNotes = event?.notes || '';
 
@@ -193,8 +193,8 @@ export class Events {
     }
   }
   resetForm() {
-    this.eventType = '';
-    this.eventName = '';
+    this.eventType = 'production';
+    this.eventName = 'inseminated';
     this.eventDate = '';
     this.eventNotes = '';
 
@@ -272,5 +272,16 @@ export class Events {
       toFormatted: to.toDateString()
     };
   }
+
+
+  onEventTypeChange() {
+  if (this.eventType === 'production') {
+    this.eventName = 'inseminated';
+  }
+
+  if (this.eventType === 'health') {
+    this.eventName = 'disease';
+  }
+}
 
 }
