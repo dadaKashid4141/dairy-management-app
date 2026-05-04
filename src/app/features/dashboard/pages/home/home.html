@@ -54,26 +54,67 @@
     <hr>
     <!-- 🔔 REMINDER WIDGET -->
     <div class="card p-3 mt-3">
-        <h6 class="mb-2">🔔 Upcoming Reminders</h6>
-        <ng-container *ngIf="reminders$ | async as reminders">
-            <div *ngIf="reminders.length === 0" class="text-muted small text-center">
-                No reminders 🎉
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <h6 class="mb-2">🔔 Upcoming Reminders</h6>
+            <div class="dropdown">
+                <i class="bi bi-funnel" role="button" data-bs-toggle="dropdown"></i>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li>
+                        <button class="dropdown-item" [class.active]="filter$.value === 'pending'" (click)="setFilter('pending')">
+                            Pending
+                        </button>
+                    </li>
+                    <li>
+                        <button class="dropdown-item" [class.active]="filter$.value === 'completed'" (click)="setFilter('completed')">
+                            Completed
+                        </button>
+                    </li>
+                </ul>
             </div>
-            <div *ngFor="let r of reminders" class="border-bottom py-2" (click)="openCattle(r.cattleId)">
-                <div class="fw-semibold">
+        </div>
+    <ng-container *ngIf="reminders$ | async as reminders">
+        <div *ngIf="reminders.length === 0" class="text-muted small text-center">
+            No reminders 🎉
+        </div>
+        <div *ngFor="let r of reminders" class="border-bottom py-2 d-flex justify-content-between align-items-center">
+            <div>
+                <div class="fw-semibold" (click)="openCattle(r.cattleId)">
                     {{ r.cattleName }} → {{ r.name }}
                 </div>
                 <div class="small" [ngClass]="{
-                    'text-danger': r.status === 'overdue',
-                    'text-warning': r.status === 'today',
-                    'text-success': r.status === 'upcoming'
-                    }">
+                                            'text-danger': r.status === 'overdue',
+                                            'text-warning': r.status === 'today',
+                                            'text-success': r.status === 'upcoming'
+                                            }">
                     {{ r.reminder.reminderDate | date:'dd-MMM-yyyy' }}
                     <span *ngIf="r.status === 'today'">(Today)</span>
                     <span *ngIf="r.status === 'overdue'">(Overdue)</span>
                 </div>
             </div>
-        </ng-container>
+            <div class="dropdown">
+                <i class="bi bi-three-dots-vertical" role="button" data-bs-toggle="dropdown"
+                    (click)="$event.stopPropagation()"></i>
+                <ul class="dropdown-menu dropdown-menu-end" (click)="$event.stopPropagation()">
+                    <li *ngIf="r.reminder?.status === 'pending'">
+                        <button class="dropdown-item" (click)="updateStatus(r, 'completed', $event)">
+                            ✅ Mark as Complete
+                        </button>
+                    </li>
+                    <li *ngIf="r.reminder?.status === 'completed'">
+                        <button class="dropdown-item" (click)="updateStatus(r, 'pending', $event)">
+                            🔄 Mark as Pending
+                        </button>
+                    </li>
+    
+                    <li>
+                        <button class="dropdown-item text-danger" (click)="removeReminder(r, $event)">
+                            ❌ Remove
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </ng-container>
     </div>
 
     <!-- 📌 OTHER SECTION -->

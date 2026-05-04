@@ -1,10 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { collection, collectionData, deleteDoc, doc, Firestore } from '@angular/fire/firestore';
+import { collection, collectionData, deleteDoc, deleteField, doc, Firestore, updateDoc } from '@angular/fire/firestore';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../../core/services/auth.service';
 import { map, switchMap, take, tap } from 'rxjs/operators';
-import { combineLatest, firstValueFrom, Observable, of } from 'rxjs';
+import { BehaviorSubject, combineLatest, firstValueFrom, Observable, of } from 'rxjs';
 import { LoaderService } from '../../../../core/services/loader.service';
 import { authState } from '@angular/fire/auth';
 import { ToastrService } from 'ngx-toastr';
@@ -37,6 +37,9 @@ export class Home {
   messages: any[] = [];
 
   reminders$!: Observable<any[]>;
+
+  filter$ = new BehaviorSubject<'pending' | 'completed'>('pending');
+
 
   constructor(
     public router: Router,
@@ -152,8 +155,8 @@ export class Home {
     );
 
     // 🔔 REMINDERS (NEW)
-    this.reminders$ = cattle$.pipe(
-      switchMap((cattleList: any[]) => {
+    this.reminders$ = combineLatest([cattle$, this.filter$]).pipe(
+      switchMap(([cattleList, filterStatus]) => {
         if (!cattleList.length) return of([]);
         const user = this.authService['auth'].currentUser;
         if (!user) return of([]);
@@ -166,46 +169,36 @@ export class Home {
             map((events: any[]) =>
               events.map(e => ({
                 ...e,
-                cattleName: cattle.name,
-                cattleId: cattle.id
+                cattleName: cattle['name'],
+                cattleId: cattle['id']
               }))
             )
           );
         });
-        return combineLatest(observables);
-      }),
-      map((allEventsArrays: any[]) => {
-        const allEvents = allEventsArrays.flat();
-
-        const today = new Date().toISOString().split('T')[0];
-
-        return allEvents
-          .filter(e =>
-            e.reminder?.reminderDate &&
-            e.reminder.status === 'pending'
-          )
-          .map(e => {
-            const date = e.reminder.reminderDate;
-
-            let status = 'upcoming';
-            if (date === today) status = 'today';
-            else if (date < today) status = 'overdue';
-
-            return {
-              ...e,
-              status
-            };
+        return combineLatest(observables).pipe(
+          map((allEventsArrays: any[]) => {
+            const allEvents = allEventsArrays.flat();
+            const today = new Date().toISOString().split('T')[0];
+            return allEvents
+              .filter(e =>
+                e.reminder?.reminderDate &&
+                e.reminder.status === filterStatus // 🔥 dynamic filter
+              )
+              .map(e => {
+                const date = e.reminder.reminderDate;
+                let status = 'upcoming';
+                if (date === today) status = 'today';
+                else if (date < today) status = 'overdue';
+                return {
+                  ...e,
+                  status
+                };
+              })
+              .sort((a, b) =>
+                a.reminder.reminderDate.localeCompare(b.reminder.reminderDate)
+              );
           })
-          .sort((a, b) => {
-            // 🔥 CUSTOM SORT
-
-            // 1. upcoming & today first
-            if (a.status !== 'overdue' && b.status === 'overdue') return -1;
-            if (a.status === 'overdue' && b.status !== 'overdue') return 1;
-
-            // 2. within same group → sort by date
-            return a.reminder.reminderDate.localeCompare(b.reminder.reminderDate);
-          });
+        );
       })
     );
   }
@@ -221,6 +214,48 @@ export class Home {
 
   openCattle(cattleId: string) {
   this.router.navigate(['/events', cattleId]);
+}
+
+setFilter(status: 'pending' | 'completed') {
+  this.filter$.next(status);
+}
+
+  async removeReminder(item: any, event: Event) {
+    event.stopPropagation();
+    const user = this.authService['auth'].currentUser;
+    if (!user) return;
+    try {
+      const ref = doc(
+        this.firestore,
+        `users/${user.uid}/cattle/${item.cattleId}/events/${item.id}`
+      );
+      await updateDoc(ref, {
+        reminder: deleteField()
+      });
+      this.toastr.success('Reminder removed ✅');
+    } catch (err) {
+      console.error(err);
+      this.toastr.error('Failed to remove reminder');
+    }
+  }
+
+async updateStatus(item: any, status: 'pending' | 'completed', event: Event) {
+  event.stopPropagation();
+  const user = this.authService['auth'].currentUser;
+  if (!user) return;
+  try {
+    const ref = doc(
+      this.firestore,
+      `users/${user.uid}/cattle/${item.cattleId}/events/${item.id}`
+    );
+    await updateDoc(ref, {
+      'reminder.status': status
+    });
+    this.toastr.success(`Marked as ${status} ✅`);
+  } catch (err) {
+    console.error(err);
+    this.toastr.error('Update failed');
+  }
 }
 
 }
