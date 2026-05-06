@@ -3,7 +3,7 @@
     <div class="d-flex align-items-center justify-content-between mb-4">
         <h4 class="text-center">Dashboard</h4>
         <button class="btn btn-primary btn-sm" (click)="addCattle()">
-            + Add
+            <i class="bi bi-plus-lg"></i> Add
         </button>
     </div>
 
@@ -188,7 +188,7 @@
 
         <div class="chat-footer d-flex">
             <input [(ngModel)]="userInput" class="form-control" placeholder="Ask something..." />
-            <button class="btn btn-primary ms-2" (click)="triggerAI()">Send</button>
+            <button class="btn btn-primary ms-2" (click)="triggerAI()"><i class="bi bi-send-fill send-icon"></i></button>
         </div>
 
     </div>

@@ -47,6 +47,8 @@ export class Events {
   remindBeforeDays: number = 0;
   reminderDate: string = '';
 
+  isSaving = false;
+
 
   constructor(
     private route: ActivatedRoute,
@@ -114,6 +116,9 @@ export class Events {
 
   // 🔥 SAVE EVENT
   async saveEvent() {
+      if (this.isSaving) return;
+      this.isSaving = true;
+      
     try {
       if (!this.eventType || !this.eventName || !this.eventDate) {
         this.toastr.error('Fill required fields');
@@ -190,6 +195,8 @@ export class Events {
     } catch (err) {
       console.error(err);
       this.toastr.error('Failed');
+    } finally {
+      this.isSaving = false;
     }
   }
   resetForm() {

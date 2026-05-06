@@ -85,3 +85,8 @@
   margin: 5px;
   color: green;
 }
+
+.bi-send-fill::before {
+    content: "\f6b9";
+    transform: rotate(45deg);
+ }
