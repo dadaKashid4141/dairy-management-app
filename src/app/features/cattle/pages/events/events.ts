@@ -49,6 +49,8 @@ export class Events {
 
   isSaving = false;
 
+  eventDurationResult: any = null;
+
 
   constructor(
     private route: ActivatedRoute,
@@ -116,9 +118,9 @@ export class Events {
 
   // 🔥 SAVE EVENT
   async saveEvent() {
-      if (this.isSaving) return;
-      this.isSaving = true;
-      
+    if (this.isSaving) return;
+    this.isSaving = true;
+
     try {
       if (!this.eventType || !this.eventName || !this.eventDate) {
         this.toastr.error('Fill required fields');
@@ -282,13 +284,72 @@ export class Events {
 
 
   onEventTypeChange() {
-  if (this.eventType === 'production') {
-    this.eventName = 'inseminated';
+    if (this.eventType === 'production') {
+      this.eventName = 'inseminated';
+    }
+
+    if (this.eventType === 'health') {
+      this.eventName = 'disease';
+    }
   }
 
-  if (this.eventType === 'health') {
-    this.eventName = 'disease';
+  calculateEventDays(event: any) {
+    if (!event.date) {
+      this.toastr.error('Event date not found');
+      return;
+    }
+    const eventParts = event.date.split('-').map(Number);
+    const eventDate = new Date(
+      eventParts[0],
+      eventParts[1] - 1,
+      eventParts[2]
+    );
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const isPastEvent = eventDate <= today;
+    const from = isPastEvent ? eventDate : today;
+    const to = isPastEvent ? today : eventDate;
+
+    const totalDays = Math.floor(
+      (Date.UTC(to.getFullYear(), to.getMonth(), to.getDate()) -
+        Date.UTC(from.getFullYear(), from.getMonth(), from.getDate()))
+      / (1000 * 60 * 60 * 24)
+    );
+
+    let years = to.getFullYear() - from.getFullYear();
+    let months = to.getMonth() - from.getMonth();
+    let days = to.getDate() - from.getDate();
+
+    if (days < 0) {
+      months--;
+      const prevMonth = new Date(to.getFullYear(), to.getMonth(), 0);
+      days += prevMonth.getDate();
+    }
+
+    if (months < 0) {
+      years--;
+      months += 12;
+    }
+
+    this.eventDurationResult = {
+      name: event.name,
+      date: event.date,
+      totalDays,
+      years,
+      months,
+      days,
+      totalMonths: years * 12 + months,
+      weeks: Math.floor(totalDays / 7),
+      remainingDays: totalDays % 7,
+      // direction: isPastEvent ? 'ago' : 'from now'
+      direction: eventDate < today ? 'ago' : eventDate > today ? 'from now' : 'today'
+    };
+
+    const modal = new (window as any).bootstrap.Modal(
+      document.getElementById('eventDurationModal')
+    );
+
+    modal.show();
   }
-}
 
 }

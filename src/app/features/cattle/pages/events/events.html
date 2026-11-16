@@ -29,8 +29,9 @@
                     <small>Event Date: {{ e.date | date: 'dd-MMM-yyyy' }}</small>
                     <div class="text-muted small">{{ e.notes }}</div>
                 </div>
-                <div class="d-flex align-items-center gap-3">
+                <div class="d-flex align-items-center gap-2">
                     <i class="bi bi-trash text-danger" (click)="deleteEvent(e)"></i>
+                    <i class="bi bi-calendar3 text-success" role="button" title="Calculate event duration" (click)="calculateEventDays(e)"></i>
                     <i class="bi bi-pencil text-primary" (click)="openModal(e)"></i>
                 </div>
             </div>
@@ -155,6 +156,55 @@
                     <p class="mb-1">- <b>{{result.years}} years {{result.months}} months {{result.days}} days</b></p>
                 </div>
             </div>
+        </div>
+    </div>
+</div>
+
+<!-- Event Duration Modal -->
+<div class="modal fade" id="eventDurationModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content p-3">
+
+            <div class="modal-header p-0 pb-3 mb-3">
+                <h5 class="modal-title">Event Duration</h5>
+                <button type="button" class="btn-close"
+                    data-bs-dismiss="modal"></button>
+            </div>
+
+            <div *ngIf="eventDurationResult">
+                <div class="text-center mb-3">
+                    <div class="fw-bold text-capitalize">
+                        {{ eventDurationResult.name }}
+                    </div>
+                    <small class="text-muted">
+                        {{ eventDurationResult.date | date:'dd-MMM-yyyy' }}
+                    </small>
+                </div>
+
+                <div class="text-muted">
+                    <p class="mb-2">
+                        - <b>{{ eventDurationResult.totalDays }} days</b>
+                        {{ eventDurationResult.direction }}
+                    </p>
+
+                    <p class="mb-2">
+                        - <b>{{ eventDurationResult.totalMonths }} months
+                        {{ eventDurationResult.days }} days</b>
+                    </p>
+
+                    <p class="mb-2">
+                        - <b>{{ eventDurationResult.weeks }} weeks
+                        {{ eventDurationResult.remainingDays }} days</b>
+                    </p>
+
+                    <p class="mb-0">
+                        - <b>{{ eventDurationResult.years }} years
+                        {{ eventDurationResult.months }} months
+                        {{ eventDurationResult.days }} days</b>
+                    </p>
+                </div>
+            </div>
+
         </div>
     </div>
 </div>

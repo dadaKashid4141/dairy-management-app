@@ -26,6 +26,7 @@ import { FormsModule } from '@angular/forms';
 export class CattleList implements OnInit {
   cattleList$!: Observable<any[]>;
   type = '';
+  searchText= '';
 
   constructor(
     private route: ActivatedRoute,
@@ -78,6 +79,19 @@ export class CattleList implements OnInit {
       this.toastr.error('Delete failed');
     }
   }
+
+  getFilteredList(list: any[]) {
+  const search = this.searchText.toLowerCase().trim();
+
+  if (!search) {
+    return list;
+  }
+
+  return list.filter(item =>
+    item.name?.toLowerCase().includes(search) ||
+    item.dob?.toLowerCase().includes(search)
+  );
+}
 
   goBack() {
     this.router.navigate(['/']);

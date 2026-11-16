@@ -24,3 +24,8 @@
 .action-icon:hover {
     opacity: 0.7;
 }
+
+.form-control:focus, .form-select:focus {
+    border-color: transparent;
+    box-shadow: none;
+}
