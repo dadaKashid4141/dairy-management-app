@@ -51,6 +51,12 @@
         }
 
     </div>
+    <div class="d-flex justify-content-center align-items-center">
+        <button class="btn btn-outline-light btn-sm" (click)="downloadCattlePDF()">
+            <i class="bi bi-file-earmark-pdf me-1"></i>
+            {{ isDownloading ? 'Generating...' : 'Download Report' }}
+        </button>
+    </div>
     <hr>
     <!-- 🔔 REMINDER WIDGET -->
     <div class="card p-3 mt-3">

@@ -82,7 +82,7 @@ export class Events {
       switchMap(user => {
         const q = query(
           collection(this.firestore, `users/${user!.uid}/cattle/${this.cattleId}/events`),
-          orderBy('date', 'desc')
+          orderBy('createdAt', 'desc')
         );
         return collectionData(q, { idField: 'id' });
       })
