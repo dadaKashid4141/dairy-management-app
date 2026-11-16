@@ -357,7 +357,7 @@ export class Home {
       // PDF Header
       pdf.setFontSize(20);
       pdf.setFont('helvetica', 'bold');
-      pdf.text('MY DAIRY', 14, 18);
+      pdf.text('CattleBook', 14, 18);
 
       pdf.setFontSize(14);
       pdf.setFont('helvetica', 'normal');
